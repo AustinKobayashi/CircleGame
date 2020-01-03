@@ -16,7 +16,8 @@ public class Player : MonoBehaviour {
 	public float RotationAmount;
 	public float PowerStageTimer;
 	public int MaxPower;
-
+	public float DamageModifier;
+	
 	public int IFrameAmount;
 	
 	public bool Player1;
@@ -130,8 +131,8 @@ public class Player : MonoBehaviour {
 				return;
 			}
 
-			Debug.Log(_rigid.velocity.magnitude);
-			int damage = Mathf.RoundToInt(_rigid.velocity.magnitude * 2f / Speed);
+			Debug.Log(other.relativeVelocity.magnitude);
+			int damage = Mathf.RoundToInt(other.relativeVelocity.magnitude * DamageModifier / Speed);
 			other.gameObject.GetComponent<Player>().TakeDamage(damage);
 			Debug.Log(gameObject.name + " damaged " + other.gameObject.name + " for " + damage);
 		}
