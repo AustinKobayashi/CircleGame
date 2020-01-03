@@ -96,17 +96,34 @@ public class Player : MonoBehaviour {
 			    Shoot();
 		    }
 	    }
+	    
+	    _arrowSpriteRenderer.color = new Vector4((float)_power / (float)MaxPower, 0f, 0f, 1f);
     }
 
 	
 
 	void Rotate() {
+/*
 		Arrow.RotateAround(transform.position, Vector3.forward, RotationAmount);
-		_arrowSpriteRenderer.color = new Vector4((float)_power / (float)MaxPower, 0f, 0f, 1f);
+*/
 		_angle += RotationAmount;
 		if (_angle >= 360) {
 			_angle = 0;
 		}
+		
+		RotateToAngle(Arrow, transform.position, _angle);
+	}
+
+
+	// (1, 0) relative to (0, 0) is the default angle of 0
+	void RotateToAngle(Transform transform, Vector3 origin, float angle) {
+		Vector3 angleVec = (transform.position - origin).normalized;
+		Vector3 originVec = Vector3.right;
+		float curRotation = Mathf.Acos(Vector3.Dot(angleVec, originVec)) * Mathf.Rad2Deg;
+		if (angleVec.y < 0) { curRotation = 360 - curRotation; }
+
+		float angleDelta = angle - curRotation;
+		transform.RotateAround(origin, Vector3.forward, angleDelta);
 	}
 	
 	
@@ -121,6 +138,7 @@ public class Player : MonoBehaviour {
 
 
 	
+	// TODO: slow collisions will deal 0 damage. Do we want it to do at least 1?
 	void OnCollisionEnter2D(Collision2D other) {
 		if (!_attacking)
 			return;
