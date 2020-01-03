@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using UnityEditorInternal;
 using UnityEngine;
 
 public class Player : MonoBehaviour {
@@ -13,14 +14,22 @@ public class Player : MonoBehaviour {
 	
 	public float RotateFrequency;
 	public float RotationAmount;
-	public float PowerIncreaseRate;
+	public float PowerStageTimer;
+	public int MaxPower;
+
+	public int IFrameAmount;
+	
+	public bool Player1;
+
+	public float Health;
 	
 	private float _rotateTimer = 0;
-	
-	private float _power;
-
-	
 	private float _angle = 0;
+	private int _power;
+	private float _powerTimer;
+	private bool _attacking;
+	private int _iFramesCount;
+	
 	
 	
 	void Awake () {
@@ -31,6 +40,8 @@ public class Player : MonoBehaviour {
 	
 
 	void Update () {
+		if (_iFramesCount > 0) { _iFramesCount--; }
+		
 		_rotateTimer += Time.deltaTime;
 		
 		if (_rotateTimer >= RotateFrequency) {
@@ -42,27 +53,55 @@ public class Player : MonoBehaviour {
 
 	
     void FixedUpdate() {
-	    if (Input.GetMouseButtonDown(0) || Input.GetMouseButton(0)) {
-		    _power += PowerIncreaseRate;
-	    }
-
-	    if (Input.touchCount > 0) {
-		    _power += PowerIncreaseRate;
-	    }
-
-	    _power = Mathf.Min(_power, 1);
+	    if (_rigid.velocity == Vector2.zero)
+		    _attacking = false;
 	    
-	    if (Input.GetMouseButtonUp(0) || (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Ended) || Input.GetKeyUp(KeyCode.Z)) {
-		    Shoot();
-		    _power = 0;
-	    }
-	}
+	    
+	    if (Player1) {
+		    if (Input.GetMouseButtonDown(0) || Input.GetKeyDown(KeyCode.Z)) {
+			    _power = 0;
+		    }
 
+		    if (Input.GetMouseButton(0) || Input.GetKey(KeyCode.Z)) {
+			    _powerTimer += Time.deltaTime;
+		    }
+
+		    if (_powerTimer >= PowerStageTimer) {
+			    _power++;
+			    _powerTimer = 0;
+		    }
+		    _power = Mathf.Min(_power, MaxPower);
+
+		    if (Input.GetMouseButtonUp(0) || Input.GetKeyUp(KeyCode.Z)) {
+			    Shoot();
+		    }
+	    }
+	    else {
+		    if (Input.GetMouseButtonDown(0) || Input.GetKeyDown(KeyCode.M)) {
+			    _power = 0;
+		    }
+
+		    if (Input.GetMouseButton(0) || Input.GetKey(KeyCode.M)) {
+			    _powerTimer += Time.deltaTime;
+		    }
+
+		    if (_powerTimer >= PowerStageTimer) {
+			    _power++;
+			    _powerTimer = 0;
+		    }
+		    _power = Mathf.Min(_power, MaxPower);
+		    
+		    if (Input.GetMouseButtonUp(0) || Input.GetKeyUp(KeyCode.M)) {
+			    Shoot();
+		    }
+	    }
+    }
+
+	
 
 	void Rotate() {
 		Arrow.RotateAround(transform.position, Vector3.forward, RotationAmount);
-		Vector4 color = _arrowSpriteRenderer.color;
-		_arrowSpriteRenderer.color = new Vector4(_power, 0f, 0f, 1f);
+		_arrowSpriteRenderer.color = new Vector4((float)_power / (float)MaxPower, 0f, 0f, 1f);
 		_angle += RotationAmount;
 		if (_angle >= 360) {
 			_angle = 0;
@@ -73,6 +112,46 @@ public class Player : MonoBehaviour {
 	
 
 	void Shoot() {
-		_rigid.AddForce(Speed * _power * new Vector2(Mathf.Cos(Mathf.Deg2Rad * _angle), Mathf.Sin(Mathf.Deg2Rad * _angle)), ForceMode2D.Impulse);
+		_attacking = true;
+		_powerTimer = 0;
+		_rigid.AddForce(Speed * _power * (new Vector2(Mathf.Cos(Mathf.Deg2Rad * _angle), Mathf.Sin(Mathf.Deg2Rad * _angle)).normalized), ForceMode2D.Impulse);
+		_power = 0;
+	}
+
+
+	
+	void OnCollisionEnter2D(Collision2D other) {
+		if (!_attacking)
+			return;
+		
+		if (other.gameObject.CompareTag("Player")) {
+			if (other.gameObject.GetComponent<Player>().Invincible()) {
+				Debug.Log(other.gameObject.name  + " is invincible to hit from " + gameObject.name);
+				return;
+			}
+
+			Debug.Log(_rigid.velocity.magnitude);
+			int damage = Mathf.RoundToInt(_rigid.velocity.magnitude * 2f / Speed);
+			other.gameObject.GetComponent<Player>().TakeDamage(damage);
+			Debug.Log(gameObject.name + " damaged " + other.gameObject.name + " for " + damage);
+		}
+	}
+
+	
+	
+	public void TakeDamage(int amount) {
+		Health -= amount;
+		
+		_iFramesCount = IFrameAmount;
+		
+		if (Health <= 0) {
+			Destroy(gameObject);
+		}
+	}
+	
+
+
+	public bool Invincible() {
+		return _iFramesCount > 0;
 	}
 }
