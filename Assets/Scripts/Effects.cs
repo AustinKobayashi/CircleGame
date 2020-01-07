@@ -10,15 +10,22 @@ public class Effects : MonoBehaviour {
     public float ShakeAmount = 0.7f;
     public float DecreaseFactor = 1.0f;
     public float MaxShakeForce = 40;
-
+    
     public float CloseDistance = 2;
     public float CloseAngle = 5f;
+    
+    public float SlowDownPercentage;
+    public float SlowDownStep;
+    public float SlowDownDuration;
     
     private List<GameObject> _players = new List<GameObject>();
     private Vector3 _originalPos;
     private Transform _camTransform;
     private float _shakeDuration = 0f;
     private float _shakeForce;
+
+    private bool _startSlowdown = false;
+    private float _slowDownTimer = 0;
     
 
     void Awake() {
@@ -33,9 +40,27 @@ public class Effects : MonoBehaviour {
             return;
         
         Screenshake();
+        
+        if (!_startSlowdown && DetectCollision()) {
+            _startSlowdown = true;
+        }
 
-        if (DetectCollision()) {
-            Debug.Log("COOOOOOOOLLLLLLLLLLLLLLLLLL");
+        if (_startSlowdown) {
+            if (Time.timeScale >= SlowDownStep)
+                Time.timeScale -= SlowDownStep;
+            
+            if (Time.timeScale < 1 - SlowDownPercentage) {
+                Time.timeScale = 1 - SlowDownPercentage;
+            }
+
+            Time.fixedDeltaTime = Time.timeScale * 0.02f;
+
+            if (Math.Abs(Time.timeScale - (1f - SlowDownPercentage)) < 0.05) {
+                _slowDownTimer += Time.deltaTime;
+                if (_slowDownTimer >= SlowDownDuration) {
+                    StopSlowDown();
+                }
+            }
         }
     }
 
@@ -69,16 +94,21 @@ public class Effects : MonoBehaviour {
             GameObject go2 = goTup.Item2;
 
             if (go1.GetComponent<Player>().IsAttacking() || go2.GetComponent<Player>().IsAttacking()) {
-                Vector2 deltaVec = go1.transform.position - go2.transform.position;
-                
-                Vector2 velVec1 = go1.GetComponent<Rigidbody2D>().velocity;
-                Vector2 velVec2 = go1.GetComponent<Rigidbody2D>().velocity;
+                Vector2 deltaVec1 = (go2.transform.position - go1.transform.position).normalized;
+                Vector2 deltaVec2 = (go1.transform.position - go2.transform.position).normalized;
 
-                if (Vector2.Angle(deltaVec, velVec1) <= CloseAngle || Vector2.Angle(-deltaVec, velVec1) <= CloseAngle)
+                Vector2 velVec1 = go1.GetComponent<Rigidbody2D>().velocity.normalized;
+                Vector2 velVec2 = go2.GetComponent<Rigidbody2D>().velocity.normalized;
+
+                if (velVec1.magnitude != 0f && Vector2.Angle(deltaVec1, velVec1) <= CloseAngle) {
+                    Debug.Log(deltaVec1 + " is close to " + velVec1);
                     return true;
-                
-                if (Vector2.Angle(deltaVec, velVec2) <= CloseAngle || Vector2.Angle(-deltaVec, velVec2) <= CloseAngle)
+                }
+
+                if (velVec2.magnitude != 0f && Vector2.Angle(deltaVec2, velVec2) <= CloseAngle) {
+                    Debug.Log(deltaVec2 + " is close to " + velVec2);
                     return true;
+                }
             }
         }
         
@@ -110,6 +140,15 @@ public class Effects : MonoBehaviour {
     
     
     public void SetPlayers(List<GameObject> players) {
+        _players.Clear();
         _players = players;
+    }
+
+    public void StopSlowDown() {
+        _slowDownTimer = 0;
+        Time.timeScale = 1;
+        Time.fixedDeltaTime = Time.timeScale * 0.02f;
+        _startSlowdown = false;
+        
     }
 }

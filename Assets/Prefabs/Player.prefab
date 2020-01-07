@@ -184,7 +184,7 @@ MonoBehaviour:
   PowerStageTimer: 0.5
   MaxPower: 4
   DamageModifier: 1
-  IFrameAmount: 50
+  IFrameAmount: 10
   Player1: 0
   Health: 1
   DebugStatements: 0

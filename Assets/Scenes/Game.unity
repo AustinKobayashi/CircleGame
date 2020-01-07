@@ -485,8 +485,11 @@ MonoBehaviour:
   ShakeAmount: 0.7
   DecreaseFactor: 1
   MaxShakeForce: 100
-  CloseDistance: 2
-  DistancePadding: 0.5
+  CloseDistance: 5
+  CloseAngle: 5
+  SlowDownPercentage: 0.9
+  SlowDownStep: 0.1
+  SlowDownDuration: 0.1
 --- !u!1 &1106743724
 GameObject:
   m_ObjectHideFlags: 0
