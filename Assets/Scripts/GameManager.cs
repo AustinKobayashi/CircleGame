@@ -28,9 +28,8 @@ public class GameManager : MonoBehaviour {
     private Effects _effects;
     
     void Awake() {
-        SpawnPlayers();
         _effects = GetComponent<Effects>();
-        _effects.SetPlayers(_players);
+        SpawnPlayers();
     }
 
 
@@ -59,6 +58,8 @@ public class GameManager : MonoBehaviour {
             
             _players.Add(player);
         }
+        
+        _effects.SetPlayers(_players);
     }
 
 
@@ -67,6 +68,7 @@ public class GameManager : MonoBehaviour {
         foreach (GameObject player in _players) {
             Destroy(player);
         }
+        _effects.StopSlowDown();
         _players.Clear();
         SpawnPlayers();
     }
