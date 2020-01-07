@@ -33,12 +33,22 @@ public class Player : MonoBehaviour {
 	private float _powerTimer;
 	private bool _attacking;
 	private int _iFramesCount;
+	private UnityEngine.UI.Text _text;
 
 	private GameManager _gameManager;
 
-	void Awake() {
+	void Start() {
 		_arrowSpriteRenderer = Arrow.GetComponent<SpriteRenderer>();
 		_rigid = GetComponent<Rigidbody2D>();
+		var texts = FindObjectsOfType<UnityEngine.UI.Text>();
+		if (name == "Player0"){
+			_text = texts[0];
+			_text.color = Color.red;
+		}else{
+			_text = texts[1];
+			_text.color = Color.blue;
+		}
+		
 	}
 
 
@@ -47,7 +57,7 @@ public class Player : MonoBehaviour {
 		if (_iFramesCount > 0) {
 			_iFramesCount--;
 		}
-
+		_text.text = $"{name}: {Health}";
 		_rotateTimer += Time.deltaTime;
 
 		if (_rotateTimer >= RotateFrequency) {
@@ -63,9 +73,9 @@ public class Player : MonoBehaviour {
 			_attacking = false;
 
 
-		if (Player1) {
-			if (Input.GetMouseButtonDown(0) || Input.GetKeyDown(KeyCode.Z)) {
-				_power = 0;
+		if (Player1) {			
+			if (Input.GetKeyDown(KeyCode.Z)) {
+				_power = 1;
 			}
 
 			if (Input.GetMouseButton(0) || Input.GetKey(KeyCode.Z)) {
@@ -84,8 +94,8 @@ public class Player : MonoBehaviour {
 			}
 		}
 		else {
-			if (Input.GetMouseButtonDown(0) || Input.GetKeyDown(KeyCode.M)) {
-				_power = 0;
+			if (Input.GetKeyDown(KeyCode.M)) {
+				_power = 1;
 			}
 
 			if (Input.GetMouseButton(0) || Input.GetKey(KeyCode.M)) {
@@ -147,7 +157,8 @@ public class Player : MonoBehaviour {
 
 
 	// TODO: slow collisions will deal 0 damage. Do we want it to do at least 1?
-	void OnCollisionEnter2D(Collision2D other) {
+	private void OnTriggerEnter2D(Collider2D other) {
+
 		if (!_attacking)
 			return;
 
@@ -158,10 +169,11 @@ public class Player : MonoBehaviour {
 				return;
 			}
 
-			int damage = Mathf.RoundToInt(other.relativeVelocity.magnitude * DamageModifier / Speed);
-			other.gameObject.GetComponent<Player>().TakeDamage(damage);
-			if (DebugStatements)
-				Debug.Log(gameObject.name + " damaged " + other.gameObject.name + " for " + damage);
+			_gameManager.DamageCalculation(gameObject, other.gameObject, Speed);
+//			int damage = Mathf.RoundToInt(other.relativeVelocity.magnitude * DamageModifier / Speed);
+//			other.gameObject.GetComponent<Player>().TakeDamage(damage);
+//			if (DebugStatements)
+//				Debug.Log(gameObject.name + " damaged " + other.gameObject.name + " for " + damage);
 		}
 	}
 

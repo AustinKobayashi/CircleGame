@@ -12,8 +12,16 @@ public class GameManager : MonoBehaviour {
     private List<GameObject> _players = new List<GameObject>();
     private Dictionary<string, int> _scores = new Dictionary<string, int>();
     private int _curRound = 1;
-    
-    
+    public Vector3[] Spawns = new Vector3[] {
+        new Vector3(-5, 0, 0),
+        new Vector3(5, 0, 0),
+        new Vector3(-5, 0, 0),
+        new Vector3(-5, 0, 0),
+        new Vector3(-5, 0, 0),
+        new Vector3(-5, 0, 0),
+        new Vector3(-5, 0, 0),
+        new Vector3(-5, 0, 0)
+    };
     void Awake() {
         SpawnPlayers();
     }
@@ -28,12 +36,7 @@ public class GameManager : MonoBehaviour {
         bool populateDict = _scores.Count == 0;
 
         for (int i = 0; i < NumPlayers; i++) {
-            Vector3 spawnLocation;
-            if (i == 0) {
-                spawnLocation = new Vector3(-5, Random.Range(-3f, 3f), 0);
-            } else {
-                spawnLocation = new Vector3(5, Random.Range(-3f, 3f), 0);
-            }
+            Vector3 spawnLocation = Spawns[i];
 
             GameObject player = Instantiate(PlayerPrefab, spawnLocation, Quaternion.identity);
             player.GetComponent<Player>().SetGameManager(this);
@@ -103,4 +106,36 @@ public class GameManager : MonoBehaviour {
             EndRound();
         }
     }
+
+
+
+    
+    public void DamageCalculation(GameObject go1, GameObject go2, float Speed) {
+
+        Rigidbody2D rigid1 = go1.GetComponent<Rigidbody2D>();
+        Rigidbody2D rigid2 = go2.GetComponent<Rigidbody2D>();
+        
+        if (rigid1.velocity.magnitude > rigid2.velocity.magnitude) {
+            int damage = Mathf.RoundToInt(rigid1.velocity.magnitude / Speed);
+            if (damage < 1) damage = 1;
+            go2.GetComponent<Player>().TakeDamage(damage);
+            Debug.Log(go1.name + " damaged " + go2.gameObject.name + " for " + damage);
+
+        } else {
+            int damage = Mathf.RoundToInt(rigid2.velocity.magnitude / Speed);
+            if (damage < 1) damage = 1;
+            go1.GetComponent<Player>().TakeDamage(damage);
+            Debug.Log(go2.name + " damaged " + go1.gameObject.name + " for " + damage);
+
+        }
+    }
 }
+
+
+
+
+
+
+
+
+
