@@ -116,7 +116,7 @@ public class Player : MonoBehaviour {
 			}
 		}
 
-		_arrowSpriteRenderer.color = new Vector4((float) _power / (float) MaxPower, 0f, 0f, 1f);
+//		_arrowSpriteRenderer.color = new Vector4((float) _power / (float) MaxPower, 0f, 0f, 1f);
 	}
 
 

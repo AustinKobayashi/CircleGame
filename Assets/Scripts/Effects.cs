@@ -60,8 +60,8 @@ public class Effects : MonoBehaviour {
         
         foreach (Tuple<GameObject, GameObject> goTup in closeGameObjects) {
 
-//            float r1 = goTup.Item1.renderer.bounds.size 
-            float r2 = goTup.Item1.GetComponent<CircleCollider2D>().radius;
+//            float r1 = goTup.Item1.GetComponent<SpriteRenderer>().bounds.size;
+//            float r2 = goTup.Item1.GetComponent<CircleCollider2D>().radius;
 
             
         }
