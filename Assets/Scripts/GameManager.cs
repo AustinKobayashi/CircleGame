@@ -12,8 +12,16 @@ public class GameManager : MonoBehaviour {
     private List<GameObject> _players = new List<GameObject>();
     private Dictionary<string, int> _scores = new Dictionary<string, int>();
     private int _curRound = 1;
-    
-    
+    public Vector3[] Spawns = new Vector3[] {
+        new Vector3(-5, 0, 0),
+        new Vector3(5, 0, 0),
+        new Vector3(-5, 0, 0),
+        new Vector3(-5, 0, 0),
+        new Vector3(-5, 0, 0),
+        new Vector3(-5, 0, 0),
+        new Vector3(-5, 0, 0),
+        new Vector3(-5, 0, 0)
+    };
     void Awake() {
         SpawnPlayers();
     }
@@ -28,12 +36,7 @@ public class GameManager : MonoBehaviour {
         bool populateDict = _scores.Count == 0;
 
         for (int i = 0; i < NumPlayers; i++) {
-            Vector3 spawnLocation;
-            if (i == 0) {
-                spawnLocation = new Vector3(-5, Random.Range(-3f, 3f), 0);
-            } else {
-                spawnLocation = new Vector3(5, Random.Range(-3f, 3f), 0);
-            }
+            Vector3 spawnLocation = Spawns[i];
 
             GameObject player = Instantiate(PlayerPrefab, spawnLocation, Quaternion.identity);
             player.GetComponent<Player>().SetGameManager(this);
