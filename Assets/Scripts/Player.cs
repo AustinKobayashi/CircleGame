@@ -6,9 +6,9 @@ using UnityEngine;
 
 public class Player : MonoBehaviour {
 
-	public Transform Arrow;
-
-	private SpriteRenderer _arrowSpriteRenderer;
+	public Transform Arrows;
+	public List<GameObject> arrowRefs = new List<GameObject>();
+	public GameObject _arrowPrefab;
 	private Rigidbody2D _rigid;
 
 	public float Speed;
@@ -26,7 +26,9 @@ public class Player : MonoBehaviour {
 	public float Health;
 
 	public bool DebugStatements;
-	
+	public float InitialArrowDistance;
+	public float ArrowSeperationDistance;
+	public float ArrowSizeIncrease;
 	private float _rotateTimer = 0;
 	private float _angle = 0;
 	private int _power;
@@ -37,10 +39,28 @@ public class Player : MonoBehaviour {
 
 	private GameManager _gameManager;
 
-	
+	void CalculateArrow() {
+		arrowRefs
+			.FindAll(o => Char.GetNumericValue(o.name[o.name.Length - 1]) > _power)
+			.ForEach(x => {
+				arrowRefs.Remove(x);
+				Destroy(x);
+			});
+		for (int i = 0; i <= _power; i++) {
+			if (arrowRefs.Count > i){
+				continue;
+			}
+			float pos = InitialArrowDistance + (ArrowSeperationDistance * i);
+			var arrowObject = Instantiate(_arrowPrefab, new Vector3(0, 0, 0), Arrows.rotation);
+			arrowObject.name = $"Arrow:{i}";
+			arrowObject.transform.SetParent(Arrows);
+			arrowObject.transform.localPosition = new Vector3(pos, 0, 0);
+			arrowObject.transform.localScale *= 1 + (i * ArrowSizeIncrease);
+			arrowRefs.Add(arrowObject);
+		}
+	}
 	
 	void Start() {
-		_arrowSpriteRenderer = Arrow.GetComponent<SpriteRenderer>();
 		_rigid = GetComponent<Rigidbody2D>();
 		var texts = FindObjectsOfType<UnityEngine.UI.Text>();
 		if (name == "Player0"){
@@ -66,6 +86,7 @@ public class Player : MonoBehaviour {
 			Rotate();
 			_rotateTimer = 0;
 		}
+		CalculateArrow();
 	}
 
 
@@ -115,8 +136,6 @@ public class Player : MonoBehaviour {
 				Shoot();
 			}
 		}
-
-//		_arrowSpriteRenderer.color = new Vector4((float) _power / (float) MaxPower, 0f, 0f, 1f);
 	}
 
 
@@ -127,7 +146,7 @@ public class Player : MonoBehaviour {
 			_angle = 0;
 		}
 
-		RotateToAngle(Arrow, transform.position, _angle);
+		RotateToAngle(Arrows, transform.position, _angle);
 	}
 
 
