@@ -75,7 +75,7 @@ public class Player : MonoBehaviour {
 
 		if (Player1) {
 			if (Input.GetMouseButtonDown(0) || Input.GetKeyDown(KeyCode.Z)) {
-				_power = 0;
+				_power = 1;
 			}
 
 			if (Input.GetMouseButton(0) || Input.GetKey(KeyCode.Z)) {
@@ -95,7 +95,7 @@ public class Player : MonoBehaviour {
 		}
 		else {
 			if (Input.GetMouseButtonDown(0) || Input.GetKeyDown(KeyCode.M)) {
-				_power = 0;
+				_power = 1;
 			}
 
 			if (Input.GetMouseButton(0) || Input.GetKey(KeyCode.M)) {
@@ -168,10 +168,11 @@ public class Player : MonoBehaviour {
 				return;
 			}
 
-			int damage = Mathf.RoundToInt(other.relativeVelocity.magnitude * DamageModifier / Speed);
-			other.gameObject.GetComponent<Player>().TakeDamage(damage);
-			if (DebugStatements)
-				Debug.Log(gameObject.name + " damaged " + other.gameObject.name + " for " + damage);
+			_gameManager.DamageCalculation(gameObject, other.gameObject, Speed);
+//			int damage = Mathf.RoundToInt(other.relativeVelocity.magnitude * DamageModifier / Speed);
+//			other.gameObject.GetComponent<Player>().TakeDamage(damage);
+//			if (DebugStatements)
+//				Debug.Log(gameObject.name + " damaged " + other.gameObject.name + " for " + damage);
 		}
 	}
 
