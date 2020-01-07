@@ -177,15 +177,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Arrow: {fileID: 2631958776515753910}
-  Speed: 20
-  RotateFrequency: 0.01
-  RotationAmount: 2
+  Speed: 25
+  RotateFrequency: 0.5
+  RotationAmount: 22
   PowerStageTimer: 0.5
-  MaxPower: 3
+  MaxPower: 4
   DamageModifier: 1
   IFrameAmount: 50
   Player1: 0
   Health: 3
+  DebugStatements: 0
 --- !u!50 &2631958777710477733
 Rigidbody2D:
   serializedVersion: 4
@@ -199,8 +200,8 @@ Rigidbody2D:
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
   m_Mass: 1
-  m_LinearDrag: 4
-  m_AngularDrag: 4
+  m_LinearDrag: 10
+  m_AngularDrag: 10
   m_GravityScale: 0
   m_Material: {fileID: 6200000, guid: 491a115aa338a421bb7a8ce3d7da58fd, type: 2}
   m_Interpolate: 0
