@@ -12,6 +12,7 @@ public class Effects : MonoBehaviour {
     public float MaxShakeForce = 40;
 
     public float CloseDistance = 2;
+    public float CloseAngle = 5f;
     
     private List<GameObject> _players = new List<GameObject>();
     private Vector3 _originalPos;
@@ -32,6 +33,10 @@ public class Effects : MonoBehaviour {
             return;
         
         Screenshake();
+
+        if (DetectCollision()) {
+            Debug.Log("COOOOOOOOLLLLLLLLLLLLLLLLLL");
+        }
     }
 
 
@@ -60,10 +65,21 @@ public class Effects : MonoBehaviour {
         
         foreach (Tuple<GameObject, GameObject> goTup in closeGameObjects) {
 
-//            float r1 = goTup.Item1.GetComponent<SpriteRenderer>().bounds.size;
-//            float r2 = goTup.Item1.GetComponent<CircleCollider2D>().radius;
+            GameObject go1 = goTup.Item1;
+            GameObject go2 = goTup.Item2;
 
-            
+            if (go1.GetComponent<Player>().IsAttacking() || go2.GetComponent<Player>().IsAttacking()) {
+                Vector2 deltaVec = go1.transform.position - go2.transform.position;
+                
+                Vector2 velVec1 = go1.GetComponent<Rigidbody2D>().velocity;
+                Vector2 velVec2 = go1.GetComponent<Rigidbody2D>().velocity;
+
+                if (Vector2.Angle(deltaVec, velVec1) <= CloseAngle || Vector2.Angle(-deltaVec, velVec1) <= CloseAngle)
+                    return true;
+                
+                if (Vector2.Angle(deltaVec, velVec2) <= CloseAngle || Vector2.Angle(-deltaVec, velVec2) <= CloseAngle)
+                    return true;
+            }
         }
         
         return false;
