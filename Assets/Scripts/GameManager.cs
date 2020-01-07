@@ -103,4 +103,34 @@ public class GameManager : MonoBehaviour {
             EndRound();
         }
     }
+
+
+
+    
+    public void DamageCalculation(GameObject go1, GameObject go2, float Speed) {
+
+        Rigidbody2D rigid1 = go1.GetComponent<Rigidbody2D>();
+        Rigidbody2D rigid2 = go2.GetComponent<Rigidbody2D>();
+
+        Debug.Log("R1: " + rigid1.velocity.magnitude);
+        Debug.Log("R2: " + rigid2.velocity.magnitude);
+
+        
+        if (rigid1.velocity.magnitude > rigid2.velocity.magnitude) {
+            int damage = Mathf.RoundToInt(rigid1.velocity.magnitude / Speed);
+            go2.GetComponent<Player>().TakeDamage(damage);
+        } else {
+            int damage = Mathf.RoundToInt(rigid2.velocity.magnitude / Speed);
+            go1.GetComponent<Player>().TakeDamage(damage);
+        }
+    }
 }
+
+
+
+
+
+
+
+
+

@@ -179,7 +179,7 @@ MonoBehaviour:
   Arrow: {fileID: 2631958776515753910}
   Speed: 25
   RotateFrequency: 0.5
-  RotationAmount: 22
+  RotationAmount: 22.5
   PowerStageTimer: 0.5
   MaxPower: 4
   DamageModifier: 1
