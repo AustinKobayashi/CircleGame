@@ -23,6 +23,8 @@ public class GameManager : MonoBehaviour {
         new Vector3(-5, 0, 0)
     };
 
+    public Vector4[] Colors;
+        
     private Effects _effects;
     
     void Awake() {
@@ -45,18 +47,15 @@ public class GameManager : MonoBehaviour {
 
             GameObject player = Instantiate(PlayerPrefab, spawnLocation, Quaternion.identity);
             player.GetComponent<Player>().SetGameManager(this);
+            player.GetComponent<SpriteRenderer>().color = Colors[i];
             player.name = "Player" + i;
             
             if (populateDict)
                 _scores.Add(player.name, 0);
             
-            // todo: change colors to a list of colors instead of hardcode
             if (i == 0) {
-                player.GetComponent<SpriteRenderer>().color = Color.red;
                 player.GetComponent<Player>().Player1 = true;
-            } else {
-                player.GetComponent<SpriteRenderer>().color = Color.blue;
-            }
+            } 
             
             _players.Add(player);
         }
