@@ -37,6 +37,8 @@ public class Player : MonoBehaviour {
 
 	private GameManager _gameManager;
 
+	
+	
 	void Start() {
 		_arrowSpriteRenderer = Arrow.GetComponent<SpriteRenderer>();
 		_rigid = GetComponent<Rigidbody2D>();
@@ -170,10 +172,6 @@ public class Player : MonoBehaviour {
 			}
 
 			_gameManager.DamageCalculation(gameObject, other.gameObject, Speed);
-//			int damage = Mathf.RoundToInt(other.relativeVelocity.magnitude * DamageModifier / Speed);
-//			other.gameObject.GetComponent<Player>().TakeDamage(damage);
-//			if (DebugStatements)
-//				Debug.Log(gameObject.name + " damaged " + other.gameObject.name + " for " + damage);
 		}
 	}
 
@@ -199,5 +197,11 @@ public class Player : MonoBehaviour {
 
 	public void SetGameManager(GameManager gameManager) {
 		_gameManager = gameManager;
+	}
+
+
+
+	public bool IsAttacking() {
+		return _attacking;
 	}
 }

@@ -22,8 +22,13 @@ public class GameManager : MonoBehaviour {
         new Vector3(-5, 0, 0),
         new Vector3(-5, 0, 0)
     };
+
+    private Effects _effects;
+    
     void Awake() {
         SpawnPlayers();
+        _effects = GetComponent<Effects>();
+        _effects.SetPlayers(_players);
     }
 
 
@@ -45,6 +50,7 @@ public class GameManager : MonoBehaviour {
             if (populateDict)
                 _scores.Add(player.name, 0);
             
+            // todo: change colors to a list of colors instead of hardcode
             if (i == 0) {
                 player.GetComponent<SpriteRenderer>().color = Color.red;
                 player.GetComponent<Player>().Player1 = true;
@@ -114,6 +120,8 @@ public class GameManager : MonoBehaviour {
 
         Rigidbody2D rigid1 = go1.GetComponent<Rigidbody2D>();
         Rigidbody2D rigid2 = go2.GetComponent<Rigidbody2D>();
+        
+        _effects.StartScreenshake(Mathf.Abs(rigid1.velocity.magnitude - rigid2.velocity.magnitude));
         
         if (rigid1.velocity.magnitude > rigid2.velocity.magnitude) {
             int damage = Mathf.RoundToInt(rigid1.velocity.magnitude / Speed);
