@@ -73,8 +73,8 @@ public class Player : MonoBehaviour {
 			_attacking = false;
 
 
-		if (Player1) {
-			if (Input.GetMouseButtonDown(0) || Input.GetKeyDown(KeyCode.Z)) {
+		if (Player1) {			
+			if (Input.GetKeyDown(KeyCode.Z)) {
 				_power = 1;
 			}
 
@@ -94,7 +94,7 @@ public class Player : MonoBehaviour {
 			}
 		}
 		else {
-			if (Input.GetMouseButtonDown(0) || Input.GetKeyDown(KeyCode.M)) {
+			if (Input.GetKeyDown(KeyCode.M)) {
 				_power = 1;
 			}
 
@@ -157,7 +157,8 @@ public class Player : MonoBehaviour {
 
 
 	// TODO: slow collisions will deal 0 damage. Do we want it to do at least 1?
-	void OnCollisionEnter2D(Collision2D other) {
+	private void OnTriggerEnter2D(Collider2D other) {
+
 		if (!_attacking)
 			return;
 
