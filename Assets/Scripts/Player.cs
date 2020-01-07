@@ -33,12 +33,22 @@ public class Player : MonoBehaviour {
 	private float _powerTimer;
 	private bool _attacking;
 	private int _iFramesCount;
+	private UnityEngine.UI.Text _text;
 
 	private GameManager _gameManager;
 
-	void Awake() {
+	void Start() {
 		_arrowSpriteRenderer = Arrow.GetComponent<SpriteRenderer>();
 		_rigid = GetComponent<Rigidbody2D>();
+		var texts = FindObjectsOfType<UnityEngine.UI.Text>();
+		if (name == "Player0"){
+			_text = texts[0];
+			_text.color = Color.red;
+		}else{
+			_text = texts[1];
+			_text.color = Color.blue;
+		}
+		
 	}
 
 
@@ -47,7 +57,7 @@ public class Player : MonoBehaviour {
 		if (_iFramesCount > 0) {
 			_iFramesCount--;
 		}
-
+		_text.text = $"{name}: {Health}";
 		_rotateTimer += Time.deltaTime;
 
 		if (_rotateTimer >= RotateFrequency) {
