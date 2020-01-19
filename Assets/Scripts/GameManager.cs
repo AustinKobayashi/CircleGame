@@ -6,6 +6,7 @@ using UnityEngine;
 public class GameManager : MonoBehaviour {
 
     private bool _resetPossible;
+    private bool _gameOver;
     public int NumRounds;
     public int NumPlayers;
     public GameObject PlayerPrefab;
@@ -38,10 +39,13 @@ public class GameManager : MonoBehaviour {
 
     void Update() {
         if (_resetPossible 
-                && (Input.GetKey(KeyCode.R) 
-                    || Input.touches.Any(touch => touch.phase == TouchPhase.Began))){
+                && (Input.GetKey(KeyCode.Space) || Input.touchCount > 0)){
             Reset();
         }
+        if (_gameOver 
+                && (Input.GetKeyDown(KeyCode.Space) || Input.touchCount > 0)){
+            UnityEngine.SceneManagement.SceneManager.LoadSceneAsync("MainMenu");
+            }
     }
 
 
@@ -82,28 +86,44 @@ public class GameManager : MonoBehaviour {
         SpawnPlayers();
     }
 
+    private string writeWinText(string text, bool end = false) {
+        string scores = _scores.Aggregate("", (acc, score) => acc += $"{score.Key}: {score.Value}".PadRight(20)).TrimEnd();
+        string resettext = end ? "Tap or Press Space to end game" : "Tap or Press Space to restart";
+        return $"{text}\n{scores}\n{resettext}";
+    }
 
 
     void EndRound() {
-        _winText.enabled = true;
-        _winText.text = $"{_players[0].name} is the winner!";
+        if (_players.Count < 1){
+            _winText.enabled = true;
+            _winText.text = writeWinText("Tie");
+        }else if (_players.Count == 1) {
+            _scores[_players[0].name]++;
+            if (NumRounds - _scores["Player0"] < NumRounds / 2.0 ||
+                    NumRounds - _scores["Player1"] < NumRounds / 2.0){
+                EndGame();
+                return;
+            }
+            _winText.enabled = true;
+            _winText.text = writeWinText($"{_players[0].name} wins round {_curRound}!");
+        }
         _curRound++;
-        _resetPossible = true;
+        if (_curRound > NumRounds){
+            EndGame();
+        }else {
+            _resetPossible = true;
+        }
     }
 
 
     void EndGame() {
         int bestScore = 0;
-        string winner = "";
         
-        foreach(KeyValuePair<string, int> entry in _scores) {
-            if (entry.Value > bestScore) {
-                bestScore = entry.Value;
-                winner = entry.Key;
-            }
-        }
-        
-        Debug.Log(winner + " wins!");
+        string winner = _scores["Player0"] > _scores["Player1"] ? "Player0" : "Player1";
+
+        _gameOver = true;
+        _winText.enabled = true;
+        _winText.text = writeWinText($"{winner} wins!", true);
     }
     
     

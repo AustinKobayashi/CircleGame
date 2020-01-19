@@ -447,8 +447,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0.0000076293945, y: -18.5}
-  m_SizeDelta: {x: 248.5, y: 67.1}
+  m_AnchoredPosition: {x: 0.000019073, y: 45}
+  m_SizeDelta: {x: 525.2, y: 245.9}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &826509920
 MonoBehaviour:
@@ -475,15 +475,17 @@ MonoBehaviour:
     m_BestFit: 0
     m_MinSize: 2
     m_MaxSize: 40
-    m_Alignment: 1
+    m_Alignment: 4
     m_AlignByGeometry: 0
     m_RichText: 1
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
-    m_LineSpacing: 1
-  m_Text: 'Player one wins!
+    m_LineSpacing: 2
+  m_Text: 'Player 1 wins!
 
-    Press R to restart'
+    congrats!
+
+    Score'
 --- !u!222 &826509921
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -599,7 +601,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8dc0eb5c712c12f45a8ca21f6bea1918, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  NumRounds: 5
+  NumRounds: 3
   NumPlayers: 2
   PlayerPrefab: {fileID: 2631958777710477729, guid: 705b27e110c130740ae221d28462c7e7,
     type: 3}
