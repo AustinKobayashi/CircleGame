@@ -62,12 +62,12 @@ public class Player : MonoBehaviour {
 	
 	void Start() {
 		_rigid = GetComponent<Rigidbody2D>();
-		var texts = FindObjectsOfType<UnityEngine.UI.Text>();
+		var texts = GameObject.FindGameObjectsWithTag("scoreText");
 		if (name == "Player0"){
-			_text = texts[0];
+			_text = texts[0].GetComponent<UnityEngine.UI.Text>();
 			_text.color = Color.red;
 		}else{
-			_text = texts[1];
+			_text = texts[1].GetComponent<UnityEngine.UI.Text>();
 			_text.color = Color.blue;
 		}
 		

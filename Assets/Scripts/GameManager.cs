@@ -10,6 +10,7 @@ public class GameManager : MonoBehaviour {
     public int NumPlayers;
     public GameObject PlayerPrefab;
     
+    private UnityEngine.UI.Text _winText;
     private List<GameObject> _players = new List<GameObject>();
     private Dictionary<string, int> _scores = new Dictionary<string, int>();
     private int _curRound = 1;
@@ -30,12 +31,13 @@ public class GameManager : MonoBehaviour {
     
     void Awake() {
         _effects = GetComponent<Effects>();
+        _winText = GameObject.FindGameObjectWithTag("winText").GetComponent<UnityEngine.UI.Text>();
         SpawnPlayers();
     }
 
 
     void Update() {
-        if (_resetPossible && Input.anyKeyDown){
+        if (_resetPossible && Input.GetKey(KeyCode.R)){
             Reset();
         }
     }
@@ -68,6 +70,7 @@ public class GameManager : MonoBehaviour {
 
     
     void Reset() {
+        _winText.enabled = false;
         _resetPossible = false;
         foreach (GameObject player in _players) {
             Destroy(player);
@@ -80,6 +83,8 @@ public class GameManager : MonoBehaviour {
 
 
     void EndRound() {
+        _winText.enabled = true;
+        _winText.text = $"{_players[0].name} is the winner!";
         _curRound++;
         _resetPossible = true;
     }
