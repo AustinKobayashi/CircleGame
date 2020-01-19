@@ -37,7 +37,9 @@ public class GameManager : MonoBehaviour {
 
 
     void Update() {
-        if (_resetPossible && Input.GetKey(KeyCode.R)){
+        if (_resetPossible 
+                && (Input.GetKey(KeyCode.R) 
+                    || Input.touches.Any(touch => touch.phase == TouchPhase.Began))){
             Reset();
         }
     }

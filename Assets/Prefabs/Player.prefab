@@ -160,9 +160,9 @@ MonoBehaviour:
   Player1: 0
   Health: 1
   DebugStatements: 0
-  InitialArrowDistance: 5
-  ArrowSeperationDistance: 1
-  ArrowSizeIncrease: 0.2
+  InitialArrowDistance: 4
+  ArrowSeperationDistance: 0.2
+  ArrowSizeIncrease: 0.05
 --- !u!50 &2631958777710477733
 Rigidbody2D:
   serializedVersion: 4
