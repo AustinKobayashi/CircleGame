@@ -176,34 +176,28 @@ public class Player : MonoBehaviour {
 	}
 
 
-
+	private bool amIFaster(Collider2D other) {
+		Vector2 myVelocity = _rigid.velocity;
+		Vector2 otherVel = other.GetComponent<Rigidbody2D>().velocity;
+		return myVelocity.magnitude >= otherVel.magnitude;
+	}
 	// TODO: slow collisions will deal 0 damage. Do we want it to do at least 1?
 	private void OnTriggerEnter2D(Collider2D other) {
-
-		if (!_attacking)
-			return;
-
 		if (other.gameObject.CompareTag("Player")) {
-			if (other.gameObject.GetComponent<Player>().Invincible()) {
+			if (!amIFaster(other)) {
 				if (DebugStatements)
 					Debug.Log(other.gameObject.name + " is invincible to hit from " + gameObject.name);
 				return;
 			}
-
-			_gameManager.DamageCalculation(gameObject, other.gameObject, Speed);
+			other.GetComponent<Player>().TakeDamage(1);
 		}
 	}
 
-
-
 	public void TakeDamage(int amount) {
 		Health -= amount;
-
 		_iFramesCount = IFrameAmount;
-
 		if (Health <= 0) {
 			_gameManager.Die(gameObject);
-			Destroy(gameObject);
 		}
 	}
 

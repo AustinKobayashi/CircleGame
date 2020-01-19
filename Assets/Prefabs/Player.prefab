@@ -1,5 +1,52 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &559933859
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 559933860}
+  - component: {fileID: 559933861}
+  m_Layer: 0
+  m_Name: HurtBox
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &559933860
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 559933859}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 2631958777710477734}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!58 &559933861
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 559933859}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  serializedVersion: 2
+  m_Radius: 0.70295393
 --- !u!1 &2631958777710477729
 GameObject:
   m_ObjectHideFlags: 0
@@ -14,7 +61,7 @@ GameObject:
   - component: {fileID: 2631958777710477733}
   - component: {fileID: 2631958777710477732}
   - component: {fileID: 635028206644234272}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Player
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -34,6 +81,7 @@ Transform:
   m_Children:
   - {fileID: 2631958776515753910}
   - {fileID: 7165932961180413345}
+  - {fileID: 559933860}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -149,9 +197,9 @@ CircleCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
+  m_Offset: {x: 0.000721097, y: 0}
   serializedVersion: 2
-  m_Radius: 0.1
+  m_Radius: 0.59924424
 --- !u!58 &635028206644234272
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -159,15 +207,15 @@ CircleCollider2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2631958777710477729}
-  m_Enabled: 1
+  m_Enabled: 0
   m_Density: 1
   m_Material: {fileID: 0}
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
+  m_Offset: {x: 0.009003758, y: 0}
   serializedVersion: 2
-  m_Radius: 0.11
+  m_Radius: 0.7016876
 --- !u!1 &6279893682938221890
 GameObject:
   m_ObjectHideFlags: 0
@@ -177,7 +225,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7165932961180413345}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Arrows
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -205,6 +253,21 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 2631958777710477734}
     m_Modifications:
+    - target: {fileID: 98301474912449403, guid: b5affcc62fde74718b8a78ea6cb0f454,
+        type: 3}
+      propertyPath: m_Name
+      value: Arrow
+      objectReference: {fileID: 0}
+    - target: {fileID: 98301474912449403, guid: b5affcc62fde74718b8a78ea6cb0f454,
+        type: 3}
+      propertyPath: m_Layer
+      value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: 98301474912449403, guid: b5affcc62fde74718b8a78ea6cb0f454,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 98301474912449402, guid: b5affcc62fde74718b8a78ea6cb0f454,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -258,16 +321,6 @@ PrefabInstance:
     - target: {fileID: 98301474912449402, guid: b5affcc62fde74718b8a78ea6cb0f454,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 98301474912449403, guid: b5affcc62fde74718b8a78ea6cb0f454,
-        type: 3}
-      propertyPath: m_Name
-      value: Arrow
-      objectReference: {fileID: 0}
-    - target: {fileID: 98301474912449403, guid: b5affcc62fde74718b8a78ea6cb0f454,
-        type: 3}
-      propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []

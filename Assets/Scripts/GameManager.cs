@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour {
 
+    private bool _resetPossible;
     public int NumRounds;
     public int NumPlayers;
     public GameObject PlayerPrefab;
@@ -34,6 +35,9 @@ public class GameManager : MonoBehaviour {
 
 
     void Update() {
+        if (_resetPossible && Input.anyKeyDown){
+            Reset();
+        }
     }
 
 
@@ -55,20 +59,20 @@ public class GameManager : MonoBehaviour {
             if (i == 0) {
                 player.GetComponent<Player>().Player1 = true;
             } 
-            
             _players.Add(player);
         }
         
-        _effects.SetPlayers(_players);
+        // _effects.SetPlayers(_players);
     }
 
 
     
     void Reset() {
+        _resetPossible = false;
         foreach (GameObject player in _players) {
             Destroy(player);
         }
-        _effects.StopSlowDown();
+        // _effects.StopSlowDown();
         _players.Clear();
         SpawnPlayers();
     }
@@ -76,18 +80,8 @@ public class GameManager : MonoBehaviour {
 
 
     void EndRound() {
-        if (_players.Count < 1)
-            Debug.Log("No winner!");
-        if (_players.Count == 1) {
-            Debug.Log(_players[0].name + " won the round!");
-            _scores[_players[0].name]++;
-        }
-
         _curRound++;
-        if (_curRound >= NumRounds)
-            EndGame();
-        else
-            Reset();
+        _resetPossible = true;
     }
 
 
@@ -109,6 +103,7 @@ public class GameManager : MonoBehaviour {
     
     public void Die(GameObject gameObject) {
         _players.Remove(gameObject);
+        Destroy(gameObject.gameObject);
         if (_players.Count <= 1) {
             EndRound();
         }
@@ -122,21 +117,22 @@ public class GameManager : MonoBehaviour {
         Rigidbody2D rigid1 = go1.GetComponent<Rigidbody2D>();
         Rigidbody2D rigid2 = go2.GetComponent<Rigidbody2D>();
         
-        _effects.StartScreenshake(Mathf.Abs(rigid1.velocity.magnitude - rigid2.velocity.magnitude));
+        // _effects.StartScreenshake(Mathf.Abs(rigid1.velocity.magnitude - rigid2.velocity.magnitude));
         
-        if (rigid1.velocity.magnitude > rigid2.velocity.magnitude) {
-            int damage = Mathf.RoundToInt(rigid1.velocity.magnitude / Speed);
-            if (damage < 1) damage = 1;
-            go2.GetComponent<Player>().TakeDamage(damage);
-            Debug.Log(go1.name + " damaged " + go2.gameObject.name + " for " + damage);
+        
+        // if (rigid1.velocity.magnitude > rigid2.velocity.magnitude) {
+        //     int damage = Mathf.RoundToInt(rigid1.velocity.magnitude / Speed);
+        //     if (damage < 1) damage = 1;
+        //     go2.GetComponent<Player>().TakeDamage(damage);
+        //     Debug.Log(go1.name + " damaged " + go2.gameObject.name + " for " + damage);
 
-        } else {
-            int damage = Mathf.RoundToInt(rigid2.velocity.magnitude / Speed);
-            if (damage < 1) damage = 1;
-            go1.GetComponent<Player>().TakeDamage(damage);
-            Debug.Log(go2.name + " damaged " + go1.gameObject.name + " for " + damage);
+        // } else {
+        //     int damage = Mathf.RoundToInt(rigid2.velocity.magnitude / Speed);
+        //     if (damage < 1) damage = 1;
+        //     go1.GetComponent<Player>().TakeDamage(damage);
+        //     Debug.Log(go2.name + " damaged " + go1.gameObject.name + " for " + damage);
 
-        }
+        // }
     }
 }
 
