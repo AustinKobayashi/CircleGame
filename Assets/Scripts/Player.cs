@@ -144,7 +144,7 @@ public class Player : MonoBehaviour {
 	}
 	private bool TouchedRight(Touch touch) {
 		Debug.Log("Touch: " + touch.position.x);
-		return touch.position.x > Screen.height / 2;
+		return touch.position.x > Screen.width / 2;
 	}
 
 	private void handleTouch(Touch touch) {
