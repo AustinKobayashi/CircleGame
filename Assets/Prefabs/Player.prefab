@@ -47,6 +47,53 @@ CircleCollider2D:
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
   m_Radius: 0.70295393
+--- !u!1 &1441628629360703564
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4741124697162542181}
+  - component: {fileID: 1125304783614838254}
+  m_Layer: 10
+  m_Name: SlowMoBox
+  m_TagString: SloMo
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4741124697162542181
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1441628629360703564}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 2631958777710477734}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!58 &1125304783614838254
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1441628629360703564}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0.002949953, y: 0.0000009536743}
+  serializedVersion: 2
+  m_Radius: 1.404392
 --- !u!1 &2631958777710477729
 GameObject:
   m_ObjectHideFlags: 0
@@ -82,6 +129,7 @@ Transform:
   - {fileID: 2631958776515753910}
   - {fileID: 7165932961180413345}
   - {fileID: 559933860}
+  - {fileID: 4741124697162542181}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -99,6 +147,7 @@ SpriteRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 0
   m_RenderingLayerMask: 4294967295
   m_RendererPriority: 0
   m_Materials:
@@ -253,21 +302,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 2631958777710477734}
     m_Modifications:
-    - target: {fileID: 98301474912449403, guid: b5affcc62fde74718b8a78ea6cb0f454,
-        type: 3}
-      propertyPath: m_Name
-      value: Arrow
-      objectReference: {fileID: 0}
-    - target: {fileID: 98301474912449403, guid: b5affcc62fde74718b8a78ea6cb0f454,
-        type: 3}
-      propertyPath: m_Layer
-      value: 9
-      objectReference: {fileID: 0}
-    - target: {fileID: 98301474912449403, guid: b5affcc62fde74718b8a78ea6cb0f454,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 98301474912449402, guid: b5affcc62fde74718b8a78ea6cb0f454,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -321,6 +355,21 @@ PrefabInstance:
     - target: {fileID: 98301474912449402, guid: b5affcc62fde74718b8a78ea6cb0f454,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 98301474912449403, guid: b5affcc62fde74718b8a78ea6cb0f454,
+        type: 3}
+      propertyPath: m_Name
+      value: Arrow
+      objectReference: {fileID: 0}
+    - target: {fileID: 98301474912449403, guid: b5affcc62fde74718b8a78ea6cb0f454,
+        type: 3}
+      propertyPath: m_Layer
+      value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: 98301474912449403, guid: b5affcc62fde74718b8a78ea6cb0f454,
+        type: 3}
+      propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []

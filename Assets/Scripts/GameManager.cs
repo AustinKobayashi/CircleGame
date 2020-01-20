@@ -64,6 +64,7 @@ public class GameManager : MonoBehaviour {
             player.GetComponent<Player>().SetGameManager(this);
             player.GetComponent<SpriteRenderer>().color = Colors[i];
             player.name = "Player" + i;
+            player.GetComponent<Player>().setEffects(_effects2);
             
             if (populateDict)
                 _scores.Add(player.name, 0);
@@ -80,6 +81,7 @@ public class GameManager : MonoBehaviour {
 
     
     void Reset() {
+        _effects2.resetCamera();
         _winText.enabled = false;
         _resetPossible = false;
         foreach (GameObject player in _players) {

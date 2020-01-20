@@ -37,6 +37,11 @@ public class Player : MonoBehaviour {
 	private UnityEngine.UI.Text _text;
 
 	private GameManager _gameManager;
+	Effectsv2 effects;
+
+	public void setEffects(Effectsv2 effects){
+		this.effects = effects;
+	}
 
 	void CalculateArrow() {
 		arrowRefs
@@ -212,6 +217,19 @@ public class Player : MonoBehaviour {
 				return;
 			}
 			other.GetComponent<Player>().TakeDamage(1);
+		}
+		if (other.gameObject.CompareTag("SloMo")){
+			effects.cameraZoom(transform.position, other.transform.position);
+		}
+	}
+	private void OnTriggerStay2D(Collider2D other) {
+		if (other.gameObject.CompareTag("SloMo")){
+			effects.cameraZoom(transform.position, other.transform.position);
+		}
+	}
+	private void OnTriggerExit2D(Collider2D other) {
+		if (other.gameObject.CompareTag("SloMo")){
+			effects.resetCamera();
 		}
 	}
 

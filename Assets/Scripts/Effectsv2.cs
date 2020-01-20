@@ -17,15 +17,20 @@ public class Effectsv2 : MonoBehaviour {
     private Transform _camTransform;
     private float _shakeDuration = 0f;
     private float _shakeForce;
-
+    private bool _slowDown;
     private bool _startSlowdown = false;
     private float _slowDownTimer = 0;
+    public float ZoomTime;
 
     void Awake() {
         _camTransform = Camera.main.transform;
         _originalPos = _camTransform.localPosition;
     }
+    private void Update() {
+        if (_slowDown){
 
+        }
+    }
     public void StartScreenshake() {
         _shakeDuration = ScreenShakeDuration;
         _shakeForce = 5;
@@ -41,7 +46,36 @@ public class Effectsv2 : MonoBehaviour {
         _camTransform.localPosition = _originalPos;
     }
 
+    async void ZoomIn(){
+        _slowDown = true;
+        var startTime = Time.time;
+        while (_slowDown && Camera.main.orthographicSize > 3){
+            float t = (Time.time - startTime) / ZoomTime;
+            Camera.main.orthographicSize = Mathf.SmoothStep(5, 3, t);
+            await Task.Delay(1);
+        }
+    }
+    async void ZoomOut(){
+        _slowDown = false;
+        var startTime = Time.time;
+        while (!_slowDown && Camera.main.orthographicSize < 5){
+            float t = (Time.time - startTime) / ZoomTime;
+            Camera.main.orthographicSize = Mathf.SmoothStep(3, 5, t);
+            await Task.Delay(1);
+        }
+    }
     public void cameraZoom(Vector2 pos1, Vector2 pos2){
-
+        Vector2 normalized = (pos1 + pos2).normalized;
+        Vector3 cameraPos = new Vector3(normalized.x, normalized.y, -10);
+        _camTransform.position = cameraPos;
+        Time.timeScale = 0.5f;
+        if (!_slowDown){
+            ZoomIn();
+        }
+    }
+    public void resetCamera() {
+        if (_slowDown) ZoomOut();
+        Time.timeScale = 1;
+        _camTransform.localPosition = _originalPos;
     }
 }

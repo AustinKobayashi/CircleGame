@@ -668,6 +668,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2d3601272bbc6430cb4c9ac004cce544, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ZoomSpeed: 0.5
   ScreenShakeDuration: 0.2
   ShakeAmount: 1
   DecreaseFactor: 1
