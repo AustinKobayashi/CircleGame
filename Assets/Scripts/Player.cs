@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
 
 public class Player : MonoBehaviour {
@@ -37,7 +38,7 @@ public class Player : MonoBehaviour {
 	private UnityEngine.UI.Text _text;
 
 	private GameManager _gameManager;
-	Effectsv2 effects;
+	private Effectsv2 effects;
 
 	public void setEffects(Effectsv2 effects){
 		this.effects = effects;
@@ -163,8 +164,8 @@ public class Player : MonoBehaviour {
 	void FixedUpdate() {
 		if (_rigid.velocity == Vector2.zero)
 			_attacking = false;
+		//Debug.Log("Current Velocity" + _rigid.velocity.magnitude);		
 	}
-
 
 
 	void Rotate() {
@@ -208,6 +209,8 @@ public class Player : MonoBehaviour {
 		Vector2 otherVel = other.GetComponent<Rigidbody2D>().velocity;
 		return myVelocity.magnitude >= otherVel.magnitude;
 	}
+
+
 	// TODO: slow collisions will deal 0 damage. Do we want it to do at least 1?
 	private void OnTriggerEnter2D(Collider2D other) {
 		if (other.gameObject.CompareTag("Player")) {
@@ -218,21 +221,10 @@ public class Player : MonoBehaviour {
 			}
 			other.GetComponent<Player>().TakeDamage(1);
 		}
-		if (other.gameObject.CompareTag("SloMo")){
-			effects.cameraZoom(transform.position, other.transform.position);
+		if (other.gameObject.CompareTag("SloMo") && _rigid.velocity.magnitude > 20){
+			effects.cameraZoom(this.gameObject, other.gameObject);
 		}
 	}
-	private void OnTriggerStay2D(Collider2D other) {
-		if (other.gameObject.CompareTag("SloMo")){
-			effects.cameraZoom(transform.position, other.transform.position);
-		}
-	}
-	private void OnTriggerExit2D(Collider2D other) {
-		if (other.gameObject.CompareTag("SloMo")){
-			effects.resetCamera();
-		}
-	}
-
 	public void TakeDamage(int amount) {
 		Health -= amount;
 		_iFramesCount = IFrameAmount;

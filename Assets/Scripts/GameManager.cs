@@ -81,7 +81,7 @@ public class GameManager : MonoBehaviour {
 
     
     void Reset() {
-        _effects2.resetCamera();
+        _effects2.ResetCamera();
         _winText.enabled = false;
         _resetPossible = false;
         foreach (GameObject player in _players) {
