@@ -30,9 +30,12 @@ public class GameManager : MonoBehaviour {
     public Vector4[] Colors;
         
     private Effects _effects;
+
+    private Effectsv2 _effects2;
     
     void Awake() {
         _effects = GetComponent<Effects>();
+        _effects2 = GetComponent<Effectsv2>();
         _winText = GameObject.FindGameObjectWithTag("winText").GetComponent<UnityEngine.UI.Text>();
         SpawnPlayers();
     }
@@ -100,8 +103,9 @@ public class GameManager : MonoBehaviour {
         _cooldown = false;
     }
     void EndRound() {
+        _effects2.StartScreenshake();
         startCoolDown();
-        if (_players.Count < 1){
+        if (_players.Count < 1){    
             _winText.enabled = true;
             _winText.text = writeWinText("Tie");
         }else if (_players.Count == 1) {
