@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Linq;
 using System.Collections.Generic;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Player : MonoBehaviour {
@@ -90,10 +89,57 @@ public class Player : MonoBehaviour {
 			_rotateTimer = 0;
 		}
 		CalculateArrow();
+		handleMovement();
 	}
 
+	private void handleMovement() {
+		if (Player1) {
+			Input.touches
+			.Where(touch => !TouchedRight(touch))
+			.ToList()
+			.ForEach(handleTouch);
+		}else {
+			Input.touches
+			.Where(touch => TouchedRight(touch))
+			.ToList()
+			.ForEach(handleTouch);
+		}
+		if (Player1) {			
+			if (Input.GetKeyDown(KeyCode.Z)) {
+				_power = 1;
+			}
+
+			if (Input.GetKey(KeyCode.Z)) {
+				_powerTimer += Time.deltaTime;
+			}
+
+			if (Input.GetKeyUp(KeyCode.Z)) {
+				Shoot();
+			}
+		}
+		else {
+			if (Input.GetKeyDown(KeyCode.M)) {
+				_power = 1;
+			}
+
+			if (Input.GetKey(KeyCode.M)) {
+				_powerTimer += Time.deltaTime;
+			}
+
+			if (Input.GetKeyUp(KeyCode.M)) {
+				Shoot();
+			}
+		}
+		if (_powerTimer >= PowerStageTimer) {
+				_power++;
+				_powerTimer = 0;
+			}
+
+		_power = Mathf.Min(_power, MaxPower);
+	}
 	private bool TouchedRight(Touch touch) {
-		return touch.position.x > Screen.width / 2;
+		Debug.Log("Touch: " + touch.position.x);
+		return touch.position.x > Screen.height / 2;
 	}
 
 	private void handleTouch(Touch touch) {
@@ -112,50 +158,6 @@ public class Player : MonoBehaviour {
 	void FixedUpdate() {
 		if (_rigid.velocity == Vector2.zero)
 			_attacking = false;
-
-		if (Player1) {
-			Input.touches
-			.Where(touch => !TouchedRight(touch))
-			.ToList()
-			.ForEach(handleTouch);
-		}else {
-			Input.touches
-			.Where(touch => TouchedRight(touch))
-			.ToList()
-			.ForEach(handleTouch);
-		}
-		if (Player1) {			
-			if (Input.GetKeyDown(KeyCode.Z)) {
-				_power = 1;
-			}
-
-			if (Input.GetMouseButton(0) || Input.GetKey(KeyCode.Z)) {
-				_powerTimer += Time.deltaTime;
-			}
-
-			if (Input.GetMouseButtonUp(0) || Input.GetKeyUp(KeyCode.Z)) {
-				Shoot();
-			}
-		}
-		else {
-			if (Input.GetKeyDown(KeyCode.M)) {
-				_power = 1;
-			}
-
-			if (Input.GetMouseButton(0) || Input.GetKey(KeyCode.M)) {
-				_powerTimer += Time.deltaTime;
-			}
-
-			if (Input.GetMouseButtonUp(0) || Input.GetKeyUp(KeyCode.M)) {
-				Shoot();
-			}
-		}
-		if (_powerTimer >= PowerStageTimer) {
-				_power++;
-				_powerTimer = 0;
-			}
-
-		_power = Mathf.Min(_power, MaxPower);
 	}
 
 

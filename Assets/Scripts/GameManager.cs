@@ -1,4 +1,4 @@
-﻿using System.Collections;
+﻿using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -7,6 +7,7 @@ public class GameManager : MonoBehaviour {
 
     private bool _resetPossible;
     private bool _gameOver;
+    private bool _cooldown;
     public int NumRounds;
     public int NumPlayers;
     public GameObject PlayerPrefab;
@@ -38,13 +39,13 @@ public class GameManager : MonoBehaviour {
 
 
     void Update() {
-        if (_resetPossible 
+        if (!_cooldown && _resetPossible 
                 && (Input.GetKey(KeyCode.Space) || Input.touchCount > 0)){
             Reset();
         }
-        if (_gameOver 
+        if (!_cooldown && _gameOver 
                 && (Input.GetKeyDown(KeyCode.Space) || Input.touchCount > 0)){
-            UnityEngine.SceneManagement.SceneManager.LoadSceneAsync("MainMenu");
+                GoToMenu();
             }
     }
 
@@ -93,7 +94,13 @@ public class GameManager : MonoBehaviour {
     }
 
 
+    private async void startCoolDown() {
+        _cooldown = true;
+        await Task.Delay(1000);
+        _cooldown = false;
+    }
     void EndRound() {
+        startCoolDown();
         if (_players.Count < 1){
             _winText.enabled = true;
             _winText.text = writeWinText("Tie");
@@ -116,9 +123,7 @@ public class GameManager : MonoBehaviour {
     }
 
 
-    void EndGame() {
-        int bestScore = 0;
-        
+    void EndGame() {        
         string winner = _scores["Player0"] > _scores["Player1"] ? "Player0" : "Player1";
 
         _gameOver = true;
@@ -161,6 +166,14 @@ public class GameManager : MonoBehaviour {
 
         // }
     }
+    private void GoToMenu(){
+		UnityEngine.SceneManagement.SceneManager.LoadSceneAsync("MainMenu");
+	}
+	private void OnApplicationPause(bool pauseStatus) {
+		if (pauseStatus){
+            GoToMenu();
+		}
+	}
 }
 
 
