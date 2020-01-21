@@ -10,6 +10,7 @@ public class Player : MonoBehaviour {
 	public List<GameObject> arrowRefs = new List<GameObject>();
 	public GameObject _arrowPrefab;
 	private Rigidbody2D _rigid;
+    public ParticleSystem deathExplosion;
 
 	public float Speed;
 
@@ -277,8 +278,10 @@ public class Player : MonoBehaviour {
 		Health -= amount;
 		_iFramesCount = IFrameAmount;
 		if (Health <= 0) {
-			_gameManager.Die(gameObject);
-		}
+            deathExplosion.transform.parent = null;
+            deathExplosion.Play();
+            _gameManager.Die(gameObject);
+        }
 	}
 
 
