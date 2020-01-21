@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -39,7 +39,7 @@ public class Player : MonoBehaviour {
 
 	private GameManager _gameManager;
 	private Effectsv2 effects;
-
+	private bool _zoomed;
 	public void setEffects(Effectsv2 effects){
 		this.effects = effects;
 	}
@@ -144,7 +144,6 @@ public class Player : MonoBehaviour {
 		_power = Mathf.Min(_power, MaxPower);
 	}
 	private bool TouchedRight(Touch touch) {
-		Debug.Log("Touch: " + touch.position.x);
 		return touch.position.x > Screen.width / 2;
 	}
 
@@ -162,9 +161,10 @@ public class Player : MonoBehaviour {
 	}
 
 	void FixedUpdate() {
-		if (_rigid.velocity == Vector2.zero)
+		if (_rigid.velocity == Vector2.zero){
+			_zoomed = false;
 			_attacking = false;
-		//Debug.Log("Current Velocity" + _rigid.velocity.magnitude);		
+		}
 	}
 
 
@@ -221,8 +221,16 @@ public class Player : MonoBehaviour {
 			}
 			other.GetComponent<Player>().TakeDamage(1);
 		}
-		if (other.gameObject.CompareTag("SloMo") && _rigid.velocity.magnitude > 20){
+		if (other.gameObject.CompareTag("SloMo") && _rigid.velocity.magnitude > effects.MinZoomVelocity){
 			effects.cameraZoom(this.gameObject, other.gameObject);
+			_zoomed = true;
+		}
+	}
+	private void OnTriggerStay2D(Collider2D other) {
+		if (_zoomed) return;
+		if (other.gameObject.CompareTag("SloMo") && !effects.SlowDown && _rigid.velocity.magnitude > 5){
+			effects.cameraZoom(this.gameObject, other.gameObject);
+			_zoomed = true;
 		}
 	}
 	public void TakeDamage(int amount) {
