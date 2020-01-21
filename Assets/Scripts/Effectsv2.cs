@@ -6,6 +6,7 @@ public class Effectsv2 : MonoBehaviour {
     public float SloMoAmount;
     public float ZoomSpeed;
     public float ZoomAmount;
+    public float MinZoomVelocity;
     public float ScreenShakeDuration;
     public float DecreaseFactor = 1.0f;
     public float MaxShakeForce = 40;
@@ -43,6 +44,9 @@ public class Effectsv2 : MonoBehaviour {
         ResetCamera();
     }
     public void cameraZoom(GameObject pos1, GameObject pos2){
+        if (!Physics2D.Raycast(pos1.transform.position, pos1.GetComponent<Rigidbody2D>().velocity.normalized * 10, Mathf.Infinity, LayerMask.GetMask("Player"))){
+            return;
+        }
         Time.timeScale = SloMoAmount;
          if (!SlowDown){
             ZoomIn(pos1, pos2);
@@ -52,7 +56,7 @@ public class Effectsv2 : MonoBehaviour {
     public async void ResetCamera() {
         Time.timeScale = 1;
         if (SlowDown) await ZoomOut();
-        _camTransform.position = _origCamPos;
+        if (!SlowDown) _camTransform.position = _origCamPos;
     }
     async void ZoomIn(GameObject player1, GameObject player2){
         SlowDown = true;
