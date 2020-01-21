@@ -195,12 +195,13 @@ public class Player : MonoBehaviour {
 			_attacking = false;
 			return;
 		}
-		var hits = Physics2D.RaycastAll(transform.position, _rigid.velocity.normalized, 1.5f, LayerMask.GetMask("SloMo"));
+		var hits = Physics2D.RaycastAll(transform.position, _rigid.velocity.normalized, 3f, LayerMask.GetMask("SloMo"));
         if (hits.Length <= 1) return;
 		var hit = hits.ToList().Find(findhit => findhit.collider.name != name);
-		if (hit && !effects.SlowDown && !_zoomed){
+		if (hit && !_zoomed){
 			_zoomed = true;
-			effects.cameraZoom(this.gameObject, hit.collider.gameObject);
+			if (!effects.SlowDown)
+				effects.cameraZoom(this.gameObject, hit.collider.gameObject);
 		}
 	}
 
