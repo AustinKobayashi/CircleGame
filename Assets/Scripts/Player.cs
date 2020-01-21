@@ -40,12 +40,27 @@ public class Player : MonoBehaviour {
 	private GameManager _gameManager;
 	private Effectsv2 effects;
 	private bool _zoomed;
-	public void setEffects(Effectsv2 effects){
+	
+	
+	public void SetEffects(Effectsv2 effects){
 		this.effects = effects;
 	}
-	public void setInitialAngle(float angle){
+	
+	
+	
+	public void SetInitialAngle(float angle){
 		_angle = angle;
 	}
+	
+	
+	
+	public void SetGameManager(GameManager gameManager) {
+		_gameManager = gameManager;
+	}
+	
+	
+	
+	// TODO: refactor to hide/enable rather than instantiate/destroy
 	void CalculateArrow() {
 		arrowRefs
 			.FindAll(o => Char.GetNumericValue(o.name[o.name.Length - 1]) > _power)
@@ -66,6 +81,9 @@ public class Player : MonoBehaviour {
 			arrowRefs.Add(arrowObject);
 		}
 	}
+	
+	
+	
 	void Start() {
 		_rigid = GetComponent<Rigidbody2D>();
 		var texts = GameObject
@@ -75,12 +93,15 @@ public class Player : MonoBehaviour {
 		if (name == "Player0"){
 			_text = texts[0];
 			_text.color = Color.red;
-		}else{
+		} else {
 			_text = texts[1];
 			_text.color = Color.blue;
 		}
 		RotateToAngle(Arrows, transform.position, _angle);		
 	}
+	
+	
+	
 	void Update() {
 		if (_iFramesCount > 0) {
 			_iFramesCount--;
@@ -93,20 +114,22 @@ public class Player : MonoBehaviour {
 			_rotateTimer = 0;
 		}
 		CalculateArrow();
-		handleMovement();
+		HandleMovement();
 	}
 
-	private void handleMovement() {
+	
+	
+	private void HandleMovement() {
 		if (Player1) {
 			Input.touches
 			.Where(touch => !TouchedRight(touch))
 			.ToList()
-			.ForEach(handleTouch);
-		}else {
+			.ForEach(HandleTouch);
+		} else {
 			Input.touches
 			.Where(touch => TouchedRight(touch))
 			.ToList()
-			.ForEach(handleTouch);
+			.ForEach(HandleTouch);
 		}
 		if (Player1) {			
 			if (Input.GetKeyDown(KeyCode.Z)) {
@@ -137,18 +160,23 @@ public class Player : MonoBehaviour {
 		if (_powerTimer >= PowerStageTimer) {
 				_power++;
 				_powerTimer = 0;
-			}
+		}
 
 		_power = Mathf.Min(_power, MaxPower);
 	}
+	
+	
+	
 	private bool TouchedRight(Touch touch) {
-		return touch.position.x > Screen.width / 2;
+		return touch.position.x > Screen.width / 2f;
 	}
 
-	private void handleTouch(Touch touch) {
+	
+	
+	private void HandleTouch(Touch touch) {
 			if (touch.phase == TouchPhase.Began) {
-					_power = 1;
-				}
+				_power = 1;
+			}
 			if (touch.phase == TouchPhase.Stationary 
 					|| touch.phase == TouchPhase.Moved){
 				_powerTimer += Time.deltaTime;
@@ -158,6 +186,8 @@ public class Player : MonoBehaviour {
 			}
 	}
 
+	
+	
 	void FixedUpdate() {
 		if (_rigid.velocity == Vector2.zero){
 			_zoomed = false;
@@ -166,6 +196,7 @@ public class Player : MonoBehaviour {
 	}
 
 
+	
 	void Rotate() {
 		_angle += RotationAmount;
 		if (_angle >= 360) {
@@ -176,6 +207,7 @@ public class Player : MonoBehaviour {
 	}
 
 
+	
 	// (1, 0) relative to (0, 0) is the default angle of 0
 	void RotateToAngle(Transform transform, Vector3 origin, float angle) {
 		Vector3 angleVec = (transform.position - origin).normalized;
@@ -191,28 +223,30 @@ public class Player : MonoBehaviour {
 
 
 
-
 	void Shoot() {
 		_attacking = true;
 		_powerTimer = 0;
 		_rigid.AddForce(
-			Speed * _power * (new Vector2(Mathf.Cos(Mathf.Deg2Rad * _angle), Mathf.Sin(Mathf.Deg2Rad * _angle))
-				.normalized), ForceMode2D.Impulse);
+			Speed * 
+			_power * 
+			(new Vector2(Mathf.Cos(Mathf.Deg2Rad * _angle), Mathf.Sin(Mathf.Deg2Rad * _angle)).normalized), 
+			ForceMode2D.Impulse);
 		_power = 0;
 	}
 
+	
 
-	private bool amIFaster(Collider2D other) {
+	private bool AmIFaster(Collider2D other) {
 		Vector2 myVelocity = _rigid.velocity;
 		Vector2 otherVel = other.GetComponent<Rigidbody2D>().velocity;
 		return myVelocity.magnitude >= otherVel.magnitude;
 	}
 
+	
 
-	// TODO: slow collisions will deal 0 damage. Do we want it to do at least 1?
 	private void OnTriggerEnter2D(Collider2D other) {
 		if (other.gameObject.CompareTag("Player")) {
-			if (!amIFaster(other)) {
+			if (!AmIFaster(other)) {
 				if (DebugStatements)
 					Debug.Log(other.gameObject.name + " is invincible to hit from " + gameObject.name);
 				return;
@@ -224,6 +258,9 @@ public class Player : MonoBehaviour {
 			_zoomed = true;
 		}
 	}
+	
+	
+	
 	private void OnTriggerStay2D(Collider2D other) {
 		if (_zoomed) return;
 		if (other.gameObject.CompareTag("SloMo") && !effects.SlowDown && _rigid.velocity.magnitude > effects.MinZoomVelocity){
@@ -231,7 +268,12 @@ public class Player : MonoBehaviour {
 			_zoomed = true;
 		}
 	}
+	
+	
+	
 	public void TakeDamage(int amount) {
+		if (Invincible()) return;
+		
 		Health -= amount;
 		_iFramesCount = IFrameAmount;
 		if (Health <= 0) {
@@ -240,17 +282,12 @@ public class Player : MonoBehaviour {
 	}
 
 
-
-	public bool Invincible() {
+	
+	private bool Invincible() {
 		return _iFramesCount > 0;
 	}
-
-
-	public void SetGameManager(GameManager gameManager) {
-		_gameManager = gameManager;
-	}
-
-
+	
+	
 
 	public bool IsAttacking() {
 		return _attacking;

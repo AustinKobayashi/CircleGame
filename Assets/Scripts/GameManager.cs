@@ -2,30 +2,24 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Serialization;
+using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour {
 
-    private bool _resetPossible;
+    private bool _roundOver;
     private bool _gameOver;
     private bool _cooldown;
     public int NumRounds;
     public int NumPlayers;
     public GameObject PlayerPrefab;
+    public Text WinText;
     
-    private UnityEngine.UI.Text _winText;
     private List<GameObject> _players = new List<GameObject>();
     private Dictionary<string, int> _scores = new Dictionary<string, int>();
     private int _curRound = 1;
-    public Vector3[] Spawns = new Vector3[] {
-        new Vector3(-5, 0, 0),
-        new Vector3(5, 0, 0),
-        new Vector3(-5, 0, 0),
-        new Vector3(-5, 0, 0),
-        new Vector3(-5, 0, 0),
-        new Vector3(-5, 0, 0),
-        new Vector3(-5, 0, 0),
-        new Vector3(-5, 0, 0)
-    };
+    
+    public Vector3[] Spawns;
 
     public Vector4[] Colors;
         
@@ -33,24 +27,26 @@ public class GameManager : MonoBehaviour {
 
     private Effectsv2 _effects2;
     
+    
+    
     void Awake() {
         _effects = GetComponent<Effects>();
         _effects2 = GetComponent<Effectsv2>();
-        _winText = GameObject.FindGameObjectWithTag("winText").GetComponent<UnityEngine.UI.Text>();
         SpawnPlayers();
     }
 
 
+    
     void Update() {
-        if (!_cooldown && _resetPossible 
-                && (Input.GetKey(KeyCode.Space) || Input.touchCount > 0)){
+        if (!_cooldown && _roundOver && (Input.GetKey(KeyCode.Space) || Input.touchCount > 0)) {
             Reset();
         }
-        if (!_cooldown && _gameOver 
-                && (Input.GetKeyDown(KeyCode.Space) || Input.touchCount > 0)){
-                GoToMenu();
-            }
+        
+        if (!_cooldown && _gameOver && (Input.GetKeyDown(KeyCode.Space) || Input.touchCount > 0)){ 
+            GoToMenu();
+        }
     }
+    
 
 
     //TODO: base spawn location on number of players
@@ -64,19 +60,19 @@ public class GameManager : MonoBehaviour {
             player.GetComponent<Player>().SetGameManager(this);
             player.GetComponent<SpriteRenderer>().color = Colors[i];
             player.name = "Player" + i;
-            player.GetComponent<Player>().setEffects(_effects2);
-            
+            player.GetComponent<Player>().SetEffects(_effects2);
+
             if (populateDict)
                 _scores.Add(player.name, 0);
-            
+
             if (i == 0) {
                 var playerScript = player.GetComponent<Player>();
                 playerScript.Player1 = true;
-                playerScript.setInitialAngle(180);
-            } 
+                playerScript.SetInitialAngle(180);
+            }
+
             _players.Add(player);
         }
-        
         // _effects.SetPlayers(_players);
     }
 
@@ -84,99 +80,88 @@ public class GameManager : MonoBehaviour {
     
     void Reset() {
         _effects2.ResetCamera();
-        _winText.enabled = false;
-        _resetPossible = false;
+        WinText.enabled = false;
+        _roundOver = false;
         foreach (GameObject player in _players) {
             Destroy(player);
         }
-        // _effects.StopSlowDown();
         _players.Clear();
         SpawnPlayers();
     }
 
-    private string writeWinText(string text, bool end = false) {
+    
+    
+    private string WriteWinText(string text, bool end = false) {
         string scores = _scores.Aggregate("", (acc, score) => acc += $"{score.Key}: {score.Value}".PadRight(20)).TrimEnd();
-        string resettext = end ? "Tap or Press Space to end game" : "Tap or Press Space to restart";
-        return $"{text}\n{scores}\n{resettext}";
+        string resetText = end ? "Tap or Press Space to end game" : "Tap or Press Space to restart";
+        return $"{text}\n{scores}\n{resetText}";
     }
 
 
-    private async void startCoolDown() {
+    
+    private async void StartCoolDown() {
         _cooldown = true;
         await Task.Delay(1000);
         _cooldown = false;
     }
+    
+    
+    
     void EndRound() {
         _effects2.StartScreenshake();
-        startCoolDown();
+        StartCoolDown();
+        
         if (_players.Count < 1){    
-            _winText.enabled = true;
-            _winText.text = writeWinText("Tie");
-        }else if (_players.Count == 1) {
+            WinText.enabled = true;
+            WinText.text = WriteWinText("Tie");
+            
+        } else if (_players.Count == 1) {
             _scores[_players[0].name]++;
-            if (NumRounds - _scores["Player0"] < NumRounds / 2.0 ||
-                    NumRounds - _scores["Player1"] < NumRounds / 2.0){
+            if (_scores["Player0"] >= Mathf.Ceil(NumRounds / 2f) || _scores["Player1"] >= Mathf.Ceil(NumRounds / 2f)) {
                 EndGame();
                 return;
             }
-            _winText.enabled = true;
-            _winText.text = writeWinText($"{_players[0].name} wins round {_curRound}!");
+            WinText.enabled = true;
+            WinText.text = WriteWinText($"{_players[0].name} wins round {_curRound}!");
         }
+        
         _curRound++;
+        
         if (_curRound > NumRounds){
             EndGame();
         }else {
-            _resetPossible = true;
+            _roundOver = true;
         }
     }
 
 
+    
     void EndGame() {        
         string winner = _scores["Player0"] > _scores["Player1"] ? "Player0" : "Player1";
 
         _gameOver = true;
-        _winText.enabled = true;
-        _winText.text = writeWinText($"{winner} wins!", true);
+        WinText.enabled = true;
+        WinText.text = WriteWinText($"{winner} wins!", true);
     }
     
     
     
-    public void Die(GameObject gameObject) {
-        _players.Remove(gameObject);
-        Destroy(gameObject.gameObject);
+    public void Die(GameObject go) {
+        _players.Remove(go);
+        Destroy(go);
         if (_players.Count <= 1) {
             EndRound();
         }
     }
 
-
-
     
-    public void DamageCalculation(GameObject go1, GameObject go2, float Speed) {
-
-        Rigidbody2D rigid1 = go1.GetComponent<Rigidbody2D>();
-        Rigidbody2D rigid2 = go2.GetComponent<Rigidbody2D>();
-        
-        // _effects.StartScreenshake(Mathf.Abs(rigid1.velocity.magnitude - rigid2.velocity.magnitude));
-        
-        
-        // if (rigid1.velocity.magnitude > rigid2.velocity.magnitude) {
-        //     int damage = Mathf.RoundToInt(rigid1.velocity.magnitude / Speed);
-        //     if (damage < 1) damage = 1;
-        //     go2.GetComponent<Player>().TakeDamage(damage);
-        //     Debug.Log(go1.name + " damaged " + go2.gameObject.name + " for " + damage);
-
-        // } else {
-        //     int damage = Mathf.RoundToInt(rigid2.velocity.magnitude / Speed);
-        //     if (damage < 1) damage = 1;
-        //     go1.GetComponent<Player>().TakeDamage(damage);
-        //     Debug.Log(go2.name + " damaged " + go1.gameObject.name + " for " + damage);
-
-        // }
-    }
+    
     private void GoToMenu(){
 		UnityEngine.SceneManagement.SceneManager.LoadSceneAsync("MainMenu");
 	}
+    
+    
+    
 	private void OnApplicationPause(bool pauseStatus) {
 		if (pauseStatus){
             GoToMenu();

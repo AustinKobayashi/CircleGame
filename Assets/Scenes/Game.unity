@@ -609,15 +609,10 @@ MonoBehaviour:
   NumPlayers: 2
   PlayerPrefab: {fileID: 2631958777710477729, guid: 705b27e110c130740ae221d28462c7e7,
     type: 3}
+  WinText: {fileID: 826509920}
   Spawns:
   - {x: -5, y: 0, z: 0}
   - {x: 5, y: 0, z: 0}
-  - {x: -5, y: 0, z: 0}
-  - {x: -5, y: 0, z: 0}
-  - {x: -5, y: 0, z: 0}
-  - {x: -5, y: 0, z: 0}
-  - {x: -5, y: 0, z: 0}
-  - {x: -5, y: 0, z: 0}
   Colors:
   - {x: 1, y: 1, z: 1, w: 1}
   - {x: 0.2, y: 0.40784314, z: 0.98039216, w: 1}
