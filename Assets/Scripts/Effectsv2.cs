@@ -45,8 +45,6 @@ public class Effectsv2 : MonoBehaviour {
         ResetCamera();
     }
     public void cameraZoom(GameObject pos1, GameObject pos2){
-        var hits = Physics2D.RaycastAll(pos1.transform.position, pos1.GetComponent<Rigidbody2D>().velocity.normalized * 10, Mathf.Infinity, LayerMask.GetMask("SloMo"));
-        if (hits.Length <= 1) return;
         Time.timeScale = SloMoAmount;
          if (!SlowDown){
             ZoomIn(pos1, pos2);

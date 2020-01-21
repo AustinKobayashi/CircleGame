@@ -193,6 +193,14 @@ public class Player : MonoBehaviour {
 		if (_rigid.velocity == Vector2.zero){
 			_zoomed = false;
 			_attacking = false;
+			return;
+		}
+		var hits = Physics2D.RaycastAll(transform.position, _rigid.velocity.normalized, 1.5f, LayerMask.GetMask("SloMo"));
+        if (hits.Length <= 1) return;
+		var hit = hits.ToList().Find(findhit => findhit.collider.name != name);
+		if (hit && !effects.SlowDown && !_zoomed){
+			_zoomed = true;
+			effects.cameraZoom(this.gameObject, hit.collider.gameObject);
 		}
 	}
 
@@ -254,23 +262,7 @@ public class Player : MonoBehaviour {
 			}
 			other.GetComponent<Player>().TakeDamage(1);
 		}
-		if (!effects.SlowDown && !_zoomed && other.gameObject.CompareTag("SloMo") && _rigid.velocity.magnitude > effects.MinZoomVelocity){
-			effects.cameraZoom(this.gameObject, other.gameObject);
-			_zoomed = true;
-		}
 	}
-	
-	
-	
-	private void OnTriggerStay2D(Collider2D other) {
-		if (_zoomed) return;
-		if (other.gameObject.CompareTag("SloMo") && !effects.SlowDown && _rigid.velocity.magnitude > effects.MinZoomVelocity){
-			effects.cameraZoom(this.gameObject, other.gameObject);
-			_zoomed = true;
-		}
-	}
-	
-	
 	
 	public void TakeDamage(int amount) {
 		if (Invincible()) return;
