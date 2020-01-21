@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Threading.Tasks;
+using System.Linq;
 
 public class Effectsv2 : MonoBehaviour {
     public float SloMoDuration;
@@ -38,15 +39,14 @@ public class Effectsv2 : MonoBehaviour {
             var currPos = _camTransform.position;
             _camTransform.localPosition = currPos + Random.insideUnitSphere * _shakeForce / MaxShakeForce;
             _shakeDuration -= Time.deltaTime * DecreaseFactor;
-            await Task.Delay(18);
+            await Task.Delay(10);
         }
         _shakeDuration = 0f;
         ResetCamera();
     }
     public void cameraZoom(GameObject pos1, GameObject pos2){
-        if (!Physics2D.Raycast(pos1.transform.position, pos1.GetComponent<Rigidbody2D>().velocity.normalized * 10, Mathf.Infinity, LayerMask.GetMask("Player"))){
-            return;
-        }
+        var hits = Physics2D.RaycastAll(pos1.transform.position, pos1.GetComponent<Rigidbody2D>().velocity.normalized * 10, Mathf.Infinity, LayerMask.GetMask("SloMo"));
+        if (hits.Length <= 1) return;
         Time.timeScale = SloMoAmount;
          if (!SlowDown){
             ZoomIn(pos1, pos2);
@@ -70,7 +70,7 @@ public class Effectsv2 : MonoBehaviour {
             Vector3 camTarget = GetCameraVector(player1, player2);
             _camTransform.position = Vector3.Lerp(origCameraLocation, camTarget, t);
             counter++;
-            await Task.Delay(1);
+            await Task.Delay(10);
         }
     }
     async Task ZoomOut(){
@@ -84,7 +84,7 @@ public class Effectsv2 : MonoBehaviour {
             Camera.main.orthographicSize = Mathf.SmoothStep(origCameraSize, _origCameraZoom, t);
             _camTransform.position = Vector3.Lerp(origCameraLocation, _origCamPos, t);
             counter++;
-            await Task.Delay(1);
+            await Task.Delay(10);
         }
         return;
     }
