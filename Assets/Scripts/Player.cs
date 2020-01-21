@@ -43,7 +43,9 @@ public class Player : MonoBehaviour {
 	public void setEffects(Effectsv2 effects){
 		this.effects = effects;
 	}
-
+	public void setInitialAngle(float angle){
+		_angle = angle;
+	}
 	void CalculateArrow() {
 		arrowRefs
 			.FindAll(o => Char.GetNumericValue(o.name[o.name.Length - 1]) > _power)
@@ -64,7 +66,6 @@ public class Player : MonoBehaviour {
 			arrowRefs.Add(arrowObject);
 		}
 	}
-	
 	void Start() {
 		_rigid = GetComponent<Rigidbody2D>();
 		var texts = GameObject
@@ -78,11 +79,8 @@ public class Player : MonoBehaviour {
 			_text = texts[1];
 			_text.color = Color.blue;
 		}
-		
+		RotateToAngle(Arrows, transform.position, _angle);		
 	}
-
-
-
 	void Update() {
 		if (_iFramesCount > 0) {
 			_iFramesCount--;

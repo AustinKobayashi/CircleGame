@@ -70,7 +70,9 @@ public class GameManager : MonoBehaviour {
                 _scores.Add(player.name, 0);
             
             if (i == 0) {
-                player.GetComponent<Player>().Player1 = true;
+                var playerScript = player.GetComponent<Player>();
+                playerScript.Player1 = true;
+                playerScript.setInitialAngle(180);
             } 
             _players.Add(player);
         }
