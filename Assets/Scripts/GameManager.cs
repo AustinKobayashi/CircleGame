@@ -2,9 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.Serialization;
-using UnityEngine.UI;
-
 public class GameManager : MonoBehaviour {
 
     private bool _roundOver;
@@ -13,7 +10,7 @@ public class GameManager : MonoBehaviour {
     public int NumRounds;
     public int NumPlayers;
     public GameObject PlayerPrefab;
-    public Text WinText;
+    public UnityEngine.UI.Text WinText;
     
     private List<GameObject> _players = new List<GameObject>();
     private Dictionary<string, int> _scores = new Dictionary<string, int>();
@@ -107,14 +104,13 @@ public class GameManager : MonoBehaviour {
     
     
     
-    void EndRound() {
+    async void EndRound() {
         _effects2.StartScreenshake();
         StartCoolDown();
-        
+        await Task.Delay(250);
         if (_players.Count < 1){    
             WinText.enabled = true;
             WinText.text = WriteWinText("Tie");
-            
         } else if (_players.Count == 1) {
             _scores[_players[0].name]++;
             if (_scores["Player0"] >= Mathf.Ceil(NumRounds / 2f) || _scores["Player1"] >= Mathf.Ceil(NumRounds / 2f)) {
