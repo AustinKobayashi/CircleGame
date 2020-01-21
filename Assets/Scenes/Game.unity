@@ -668,11 +668,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2d3601272bbc6430cb4c9ac004cce544, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SloMoDuration: 1.5
+  SloMoDuration: 1
   SloMoAmount: 0.01
-  ZoomSpeed: 2
-  ZoomAmount: 2
-  MinZoomVelocity: 15
+  ZoomSpeed: 5
+  ZoomAmount: 3
+  MinZoomVelocity: 0
   ScreenShakeDuration: 0.5
   DecreaseFactor: 1
   MaxShakeForce: 40
