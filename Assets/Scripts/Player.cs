@@ -219,14 +219,14 @@ public class Player : MonoBehaviour {
 			}
 			other.GetComponent<Player>().TakeDamage(1);
 		}
-		if (other.gameObject.CompareTag("SloMo") && _rigid.velocity.magnitude > effects.MinZoomVelocity){
+		if (!effects.SlowDown && !_zoomed && other.gameObject.CompareTag("SloMo") && _rigid.velocity.magnitude > effects.MinZoomVelocity){
 			effects.cameraZoom(this.gameObject, other.gameObject);
 			_zoomed = true;
 		}
 	}
 	private void OnTriggerStay2D(Collider2D other) {
 		if (_zoomed) return;
-		if (other.gameObject.CompareTag("SloMo") && !effects.SlowDown && _rigid.velocity.magnitude > 5){
+		if (other.gameObject.CompareTag("SloMo") && !effects.SlowDown && _rigid.velocity.magnitude > effects.MinZoomVelocity){
 			effects.cameraZoom(this.gameObject, other.gameObject);
 			_zoomed = true;
 		}
