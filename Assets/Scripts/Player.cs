@@ -195,8 +195,9 @@ public class Player : MonoBehaviour {
 			_attacking = false;
 			return;
 		}
-		var hits = Physics2D.RaycastAll(transform.position, _rigid.velocity.normalized, 3f, LayerMask.GetMask("SloMo"));
-        if (hits.Length <= 1) return;
+		var hits = Physics2D.RaycastAll(transform.position, _rigid.velocity.normalized, _rigid.velocity.magnitude*0.05f, LayerMask.GetMask("SloMo"));
+		Debug.DrawRay(transform.position,_rigid.velocity.normalized * (_rigid.velocity.magnitude * 0.05f), Color.red, 2);
+		if (hits.Length <= 1) return;
 		var hit = hits.ToList().Find(findhit => findhit.collider.name != name);
 		if (hit && !_zoomed){
 			_zoomed = true;
