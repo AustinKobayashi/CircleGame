@@ -13,8 +13,8 @@ public class MultiplayerManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(Input.anyKey || Input.touchCount > 0)
-            UnityEngine.SceneManagement.SceneManager.LoadSceneAsync("MainMenu");
+//        if(Input.anyKey || Input.touchCount > 0)
+//            UnityEngine.SceneManagement.SceneManager.LoadSceneAsync("MainMenu");
         
     }
 }
